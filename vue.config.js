@@ -25,9 +25,12 @@ module.exports = {
    * Detail: https://cli.vuejs.org/config/#publicpath
    */
   publicPath: './',
-  outputDir: 'dist',
   assetsDir: 'static',
   lintOnSave: false,
+  filenameHashing: false, // 去除文件hash
+  css: {
+    extract: true,
+  },
   productionSourceMap: false,
   devServer: {
     port: port,
@@ -43,9 +46,10 @@ module.exports = {
     // it can be accessed in index.html to inject the correct title.
     name: name,
     resolve: {
+      extensions: ['.js', '.json', '.vue'],
       alias: {
-        '@': resolve('src')
-      }
+        '@': path.resolve(__dirname, 'src/'),
+      },
     }
   },
   chainWebpack(config) {
@@ -91,32 +95,11 @@ module.exports = {
               inline: /runtime\..*\.js$/
             }])
             .end()
-          config
-            .optimization.splitChunks({
-              chunks: 'all',
-              cacheGroups: {
-                libs: {
-                  name: 'chunk-libs',
-                  test: /[\\/]node_modules[\\/]/,
-                  priority: 10,
-                  chunks: 'initial' // only package third parties that are initially dependent
-                },
-                elementUI: {
-                  name: 'chunk-elementUI', // split elementUI into a single package
-                  priority: 20, // the weight needs to be larger than libs and app or it will be packaged into libs or app
-                  test: /[\\/]node_modules[\\/]_?element-ui(.*)/ // in order to adapt to cnpm
-                },
-                commons: {
-                  name: 'chunk-commons',
-                  test: resolve('src/components'), // can customize your rules
-                  minChunks: 3, //  minimum common number
-                  priority: 5,
-                  reuseExistingChunk: true
-                }
-              }
-            })
-          config.optimization.runtimeChunk('single')
+          config.optimization.delete('splitChunks');
+          // config.optimization.runtimeChunk('single');
+
         }
       )
+
   }
 }
