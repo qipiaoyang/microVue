@@ -1,32 +1,25 @@
 <template>
   <div :class="classObj" class="app-wrapper">
-    <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
-    <sidebar class="sidebar-container" />
+
     <div class="main-container">
-      <div :class="{'fixed-header':fixedHeader}">
-        <navbar />
-      </div>
       <app-main />
     </div>
   </div>
 </template>
 
 <script>
-import { Navbar, Sidebar, AppMain } from './components'
+import { AppMain } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
 
 export default {
   name: 'Layout',
   components: {
-    Navbar,
-    Sidebar,
+
     AppMain
   },
   mixins: [ResizeMixin],
   computed: {
     sidebar() {
-      console.log(this.$store.state,"123123123")
-
       return this.$store.state.app.sidebar
     },
     device() {
